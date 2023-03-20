@@ -6,6 +6,9 @@ const bcrypt = require('bcryptjs');
 const app = express();
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
+const multer = require('multer');
+const uploadMiddleware = multer({ dest: 'uploads/' });
+const fs = require('fs');
 
 
 const salt = bcrypt.genSaltSync(10);   //password hashed ,stored as such in db
@@ -66,6 +69,19 @@ app.get('/profile', (req,res)=>{
 app.post('/logout',(req,res) => {
     res.cookie('token', ' ').json('ok');  //invalidating cookies(token)
 });
+
+
+app.post('/post', uploadMiddleware.single('file'), (req,res)=> {
+    const {originalname, path} =  req.file; //creating extention
+    const parts = originalname.split('.');
+    const ext = parts[parts.length - 1];
+    const newPath = path+'.'+ext //renaming path
+    fs.renameSync(path, newPath);
+
+
+
+    res.json({ext});
+})
 
 app.listen(4000);
 
