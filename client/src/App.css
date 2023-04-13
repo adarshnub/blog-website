@@ -281,3 +281,21 @@ div.post-page div.author{
   font-size: 0.7rem;
   font-weight: bold;
 }
+div.edit-row{
+  text-align: center;
+}
+
+div.post-page a.edit-btn{
+  background-color: #333;
+  color: #fff;
+  display: inline-flex;
+  padding: 15px 30px;
+  text-decoration: none;
+  border-radius: 5px;
+  align-items:center;
+  gap:5px;
+}
+
+a svg{
+  height: 20px;
+}
