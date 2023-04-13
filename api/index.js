@@ -17,7 +17,7 @@ const secret = "aaadkdfnvs454ad4ef856";
 app.use(cors({ credentials: true, origin: "http://localhost:3000" })); //to catch headers properly
 app.use(express.json()); //json parser
 app.use(cookieParser());
-app.use('/uploads', express.static(__dirname + '/uploads'));
+app.use("/uploads", express.static(__dirname + "/uploads"));
 
 mongoose.connect(
   "mongodb+srv://blog:blog@cluster0.2hrbez2.mongodb.net/?retryWrites=true&w=majority"
@@ -56,6 +56,36 @@ app.post("/login", async (req, res) => {
   }
 });
 
+//updating the post
+app.put("/post", uploadMiddleware.single("file"), async (req, res) => {
+  let newPath = null;
+  if (req.file) {
+    const { originalname, path } = req.file; //creating extention
+    const parts = originalname.split(".");
+    const ext = parts[parts.length - 1];
+    newPath = path + "." + ext; //renaming path
+    fs.renameSync(path, newPath);
+  }
+
+  const {token} = req.cookies;
+  jwt.verify(token, secret, {}, async (err, info) => {
+    if (err) throw err;
+    const { id, title, summary, content } = req.body;
+    const postDoc = await Post.findById()
+    const isAuthor = postDoc.author === info.id;
+    res.json({isAuthor,postDoc,info});
+    // const postDoc = await Post.create({
+    //   title,
+    //   summary,
+    //   content,
+    //   cover: newPath,
+    //   author: info.id,
+    // });
+    res.json(postDoc);
+  });
+
+});
+
 //valiating the cookie to check if logged-in
 app.get("/profile", (req, res) => {
   const { token } = req.cookies;
@@ -92,20 +122,21 @@ app.post("/post", uploadMiddleware.single("file"), async (req, res) => {
 });
 
 app.get("/post", async (req, res) => {
-  res.json(await Post.find()
-  .populate("author", ["username"])
-  .sort({createdAt: -1})
-  .limit(20)
+  res.json(
+    await Post.find()
+      .populate("author", ["username"])
+      .sort({ createdAt: -1 })
+      .limit(20)
   );
 });
 
-app.get('/post/:id',async (req, res)=> {
-  const {id} = req.params;
-  const postDoc = await Post.findById(id).populate('author',['username']);
+app.get("/post/:id", async (req, res) => {
+  const { id } = req.params;
+  const postDoc = await Post.findById(id).populate("author", ["username"]);
   res.json(postDoc);
-})
+});
 
 app.listen(4000);
 
 //mongodb+srv://blog:blog@cluster0.2hrbez2.mongodb.net/?retryWrites=true&w=majority
-//id blog pass blog
+//id =blog pass =blog
