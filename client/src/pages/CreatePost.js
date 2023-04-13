@@ -2,6 +2,7 @@ import { useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { Navigate } from "react-router-dom";
+import Editor from "../Editor";
 
 export default function CreatePost() {
   const [title, setTitle] = useState("");
@@ -52,7 +53,8 @@ export default function CreatePost() {
         onChange={(ev) => setSummary(ev.target.value)}
       />
       <input type="file"  onChange={ev=> setFiles(ev.target.files)} />
-      <ReactQuill value={content} onChange={newValue => setContent(newValue)}/>
+      {/* <ReactQuill value={content} onChange={newValue => setContent(newValue)}/> */}
+      <Editor value={content} onChange={setContent} />
       <button class="button-48" role="button-48" style={{ border: 5 }}>
         {" "}
         <span class="text">Create Post</span>
