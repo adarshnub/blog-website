@@ -22,10 +22,11 @@ export default function EditPost(){
             setSummary(postInfo.summary);
         })
     })
-  },[]);
+  }, []);
 
   async function updatePost(ev){
     ev.preventDefault();
+    const data = new FormData();
     data.set('title',title);
     data.set('summary',summary);
     data.set('content',content);
@@ -33,20 +34,22 @@ export default function EditPost(){
     if(files?.[0]) {                  //files can be empty
         data.set('file',files?.[0]);
     }
-    const data = new FormData();
+    
     const response = await fetch('http://localhost:4000/post', {
         method: 'PUT',
         body: data,
         credentials: 'include',
     });
-    if(response.ok) {
-        setRedirect(true); 
-    }
+    
+        if(response.ok){
+            setRedirect(true);
+        } 
+
        //after update
   }  
   
   if(redirect){
-    return <Navigate to={'/post'+id} />
+    return <Navigate to={'/post/'+id} />
   }
   return (
     <form

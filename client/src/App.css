@@ -299,3 +299,14 @@ div.post-page a.edit-btn{
 a svg{
   height: 20px;
 }
+
+a{
+  cursor:pointer;
+}
+/* span{
+  position:absolute;
+  top:5rem;
+  left:19rem;
+  color:darkslateblue;
+  font-weight: 700;
+} */

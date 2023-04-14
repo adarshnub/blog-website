@@ -30,11 +30,12 @@ export default function Header() {
   return (
     <header>
       <Link to="/" className="logo">
-        MyBlog
+        Blogs
       </Link>
       <nav>
         {username && (
           <>
+          
             <a class="button-30">
               <Link to="/create">Create new post</Link>
             </a>
